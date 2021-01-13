@@ -1,0 +1,20 @@
+DATABASE:
+  NAME: mongodb
+  TYPE: mongodb
+  HOST: localhost
+  PORT: 27017
+  USERNAME:
+  PASSWORD:
+  DATABASE:
+  CACHE: true
+  SYNCHRONIZE: true
+  LOGGING: false
+  USE_UNIFIED_TOPOLOGY: true
+  CLI:
+    migrationsDir: migration
+  entities:
+    - src/models/mongodb/**/*.ts
+  migrations:
+    - migration/mongodb/**/*.ts
+  subscribers:
+    - src/subscribers/mongodb/**/*.ts

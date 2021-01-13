@@ -1,0 +1,41 @@
+{
+  "name": "backend-latte-ro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "----------- Development -------": "",
+    "startdev": "nodemon src/index.ts",
+    "----------- Linux -------------": "",
+    "start": "npm run build && node build/src/index.js",
+    "build": "rm -rf build && tsc && cp -rf src/config build/src/config",
+    "----------- Windows -----------": "",
+    "wstart": "npm run wbuild && node build\\src\\index.js",
+    "wbuild": "npm run wrmbuild && tsc && npm run wcopyconfig",
+    "----------- Others ------------": "",
+    "wcopyconfig": "(xcopy \"src\\config\" \"build\\src\\config\" /s/h/e/k/f/c/i)",
+    "wrmbuild": "(if exist build rd /s /q build)"
+  },
+  "keywords": [],
+  "author": "nquizx",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/hapi__hapi": "^20.0.2",
+    "@types/js-yaml": "^3.12.5",
+    "@types/node": "^14.14.7",
+    "dotenv": "^8.2.0",
+    "tsconfig-paths": "^3.9.0",
+    "tslint": "^5.20.1",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^20.0.2",
+    "inversify": "^5.0.1",
+    "js-yaml": "^3.14.0",
+    "mongodb": "^3.6.3",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.29"
+  }
+}

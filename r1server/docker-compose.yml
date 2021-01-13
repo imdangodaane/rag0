@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db-mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+  db-mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_USER: ragnarokdev
+      MYSQL_PASSWORD: ragnarokdev
+      MYSQL_DATABASE: ragnarokdev
+      MYSQL_ROOT_PASSWORD: ragnarokdev
+    ports:
+      - 3306:3306
