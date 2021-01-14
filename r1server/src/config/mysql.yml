@@ -3,9 +3,9 @@ DATABASE:
   TYPE: mysql
   HOST: localhost
   PORT: 3306
-  USERNAME: ragnarokdev
-  PASSWORD: ragnarokdev
-  DATABASE: ragnarokdev
+  USERNAME: admin
+  PASSWORD: '123456'
+  DATABASE: ragnarok
   CACHE: true
   SYNCHRONIZE: false
   LOGGING: false

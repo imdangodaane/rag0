@@ -1,43 +1,52 @@
-import hapi from '@hapi/hapi';
-import { injectable } from 'inversify';
+import { HandlerDecorations, Lifecycle, Request, ResponseToolkit } from '@hapi/hapi';
+import { inject, injectable } from 'inversify';
+import { IDENTIFIER } from '../../../../helpers/utilites/identifier';
+import { IUsersBusinessLogic } from './Users.BusinessLogic';
 
 export interface IUsersController {
-  getRoutes(): hapi.ServerRoute[];
+  createUser(): Lifecycle.Method | HandlerDecorations;
+  retrieveUsers(): Lifecycle.Method | HandlerDecorations;
+  retrieveUser(): Lifecycle.Method | HandlerDecorations;
+  modifyUser(): Lifecycle.Method | HandlerDecorations;
+  removeUser(): Lifecycle.Method | HandlerDecorations;
 }
 
 @injectable()
 export class UsersController implements IUsersController {
-  #routes!: hapi.ServerRoute[];
 
-  constructor() {
-    this.#routes = [];
+  constructor(
+    @inject(IDENTIFIER.USERS_BUSINESSLOGIC) private usersBL: IUsersBusinessLogic,
+  ) {
 
-    this.attachRoutes();
   }
 
-  getRoutes() {
-    return this.#routes;
+  public createUser() {
+    return async (request: Request, h: ResponseToolkit) => {
+      return h.response('Users: Create');
+    };
   }
 
-  private attachRoutes() {
-    this.#routes = [
-      ...this.#routes,
-      this.usersGetOneById(),
-    ];
-
-    return this.#routes;
+  public retrieveUsers() {
+    return async (request: Request, h: ResponseToolkit) => {
+      return h.response('Users: Retrieve');
+    };
   }
 
-  private usersGetOneById(): hapi.ServerRoute {
-    return {
-      method: 'GET',
-      path: '/users/{id}',
-      handler: (request, h) => {
-        return h.response({
-          message: 'OK',
-          data: 'Get user by ID',
-        });
-      },
+  public retrieveUser() {
+    return async (request: Request, h: ResponseToolkit) => {
+      return h.response('Users Retrieve one');
+    };
+  }
+
+  public modifyUser() {
+    return async (request: Request, h: ResponseToolkit) => {
+      return h.response('Users: Modify user');
+    };
+  }
+
+  public removeUser() {
+    return async (request: Request, h: ResponseToolkit) => {
+      return h.response('Users: Remove');
     };
   }
 }

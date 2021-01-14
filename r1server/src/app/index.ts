@@ -1,27 +1,26 @@
 import hapi from '@hapi/hapi';
-import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 
 export class Application {
   #server!: hapi.Server;
-  #serverRoutes!: hapi.ServerRoute[];
+  #serverRoutes: hapi.ServerRoute[] = [];
 
-  constructor() {
-    this.#serverRoutes = [];
-  }
-
-  async start() {
-    this.#server.start().then(() => {
-      console.log(`[${new Date().toLocaleString()}]\t[Application] started and listen on: ${this.#server.info.uri}`);
-    });
-  }
-
-  createServer(serverConfig: hapi.ServerOptions) {
-    const server = hapi.server(serverConfig);
-    this.#server = server;
+  private _createServer(serverOptions: hapi.ServerOptions): hapi.Server {
+    const server = hapi.server(serverOptions);
     return server;
   }
 
-  attachRoutes(routes: hapi.ServerRoute[]) {
+  constructor(serverOptions: hapi.ServerOptions) {
+    this.#server = this._createServer(serverOptions);
+  }
+
+  async start() {
+    this.#server.start()
+      .then(
+        () => console.log(`[${new Date().toLocaleString()}]\t[Application] started and listen on: ${this.#server.info.uri}`),
+      );
+  }
+
+  attachRoutes(routes: hapi.ServerRoute[]): Application {
     this.#serverRoutes = [
       ...this.#serverRoutes,
       ...routes,

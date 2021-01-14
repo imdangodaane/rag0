@@ -1,14 +1,15 @@
 import { inject, injectable } from 'inversify';
 import { IYamlHelper } from './yaml';
 import path from 'path';
-import { DatabaseType } from 'typeorm';
 
-export interface IDefaultConfig {
+export type IServerConfig = {
   SERVER: {
     HOST: string,
     PORT: string,
   };
-}
+};
+
+export interface IDefaultConfig extends IServerConfig {}
 
 export interface IDefaultDatabaseConfig {
   DATABASE: {
@@ -33,32 +34,30 @@ export interface IDefaultDatabaseConfig {
 }
 
 export interface IConstantHelper {
-  defaultConfig: IDefaultConfig;
-  readYamlConfig(path: string): string | object | undefined;
+  getDefaultConfig(): IDefaultConfig;
 }
 
 @injectable()
 export class ConstantHelper implements IConstantHelper {
-  #defaultConfigPath: string = path.resolve(path.join(
-    'src', 'config', 'default.yml',
-  ));
+  #defaultConfigPath: string;
   #defaultConfig!: IDefaultConfig;
 
   constructor(
     @inject('IYamlHelper') private yamlHelper: IYamlHelper,
   ) {
-    this.readDefaultConfig();
+    this.#defaultConfigPath = path.resolve(path.join(
+      'src',
+      'config',
+      'default.yml',
+    ));
+    this.#defaultConfig = this.loadConfig(this.#defaultConfigPath);
   }
 
-  private readDefaultConfig(): void {
-    this.#defaultConfig = this.readYamlConfig(this.#defaultConfigPath) as IDefaultConfig;
+  public loadConfig(path: string) {
+    return this.yamlHelper.readYamlFile(path) as IServerConfig;
   }
 
-  public get defaultConfig(): IDefaultConfig {
+  public getDefaultConfig(): IDefaultConfig {
     return this.#defaultConfig;
-  }
-
-  readYamlConfig(path: string): string | object | undefined {
-    return this.yamlHelper.readYamlFile(path);
   }
 }

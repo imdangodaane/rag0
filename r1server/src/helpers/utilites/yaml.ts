@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import jsYaml from 'js-yaml';
 import { ILogger } from './logger';
 import { IFileHelper } from './file';
+import jsYaml from 'js-yaml';
 
 export interface IYamlHelper {
   readYamlFile(path: string): string | object | undefined;
@@ -19,6 +19,7 @@ export class YamlHelper implements IYamlHelper {
   readYamlFile(path: string): string | object | undefined {
     try {
       const fileContent = this.fileHelper.readFile(path);
+
       if (!fileContent) {
         this.logger.error('Failed to read file content');
         return;

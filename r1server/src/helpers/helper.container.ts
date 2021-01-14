@@ -5,16 +5,19 @@ import { IParseHelper, ParseHelper } from './utilites/parse';
 import { IYamlHelper, YamlHelper } from './utilites/yaml';
 import { ConstantHelper, IConstantHelper } from './utilites/constant';
 import { BootstrapHelper, IBootstrapHelper } from './utilites/bootstrap';
+import { IDENTIFIER } from './utilites/identifier';
+import { HttpHelper, IHttpHelper } from './utilites/http';
 
 export const createHelperContainer = (): Container => {
   const container = new Container();
 
-  container.bind<IConstantHelper>('IConstantHelper').to(ConstantHelper).inSingletonScope();
-  container.bind<ILogger>('ILogger').to(Logger);
-  container.bind<IFileHelper>('IFileHelper').to(FileHelper);
-  container.bind<IParseHelper>('IParseHelper').to(ParseHelper);
-  container.bind<IYamlHelper>('IYamlHelper').to(YamlHelper);
-  container.bind<IBootstrapHelper>('IBootstrapHelper').to(BootstrapHelper);
+  container.bind<IConstantHelper>(IDENTIFIER.CONSTANT_HELPER).to(ConstantHelper).inSingletonScope();
+  container.bind<ILogger>(IDENTIFIER.LOGGER).to(Logger);
+  container.bind<IFileHelper>(IDENTIFIER.FILE_HELPER).to(FileHelper);
+  container.bind<IParseHelper>(IDENTIFIER.PARSE_HELPER).to(ParseHelper);
+  container.bind<IYamlHelper>(IDENTIFIER.YAML_HELPER).to(YamlHelper);
+  container.bind<IBootstrapHelper>(IDENTIFIER.BOOTSTRAP_HELPER).to(BootstrapHelper);
+  container.bind<IHttpHelper>(IDENTIFIER.HTTP_HELPER).to(HttpHelper);
 
   return container;
 };

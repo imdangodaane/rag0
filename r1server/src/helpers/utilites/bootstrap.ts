@@ -1,13 +1,13 @@
-import path from 'path';
 import hapi from '@hapi/hapi';
+import fs from 'fs';
 import { inject, injectable } from 'inversify';
 import { ConnectionOptions } from 'typeorm';
 import { IYamlHelper } from './yaml';
 import { IConstantHelper, IDefaultConfig, IDefaultDatabaseConfig } from './constant';
 
 export interface IBootstrapHelper {
-  getServerConfig(configPath?: string[]): hapi.ServerOptions;
-  getDbConnectionConfig(configPath: string[]): Promise<ConnectionOptions>;
+  loadServerConfig(configPath?: string): hapi.ServerOptions;
+  loadDbConnectionConfig(configPath: string): Promise<ConnectionOptions>;
 }
 
 @injectable()
@@ -19,33 +19,32 @@ export class BootstrapHelper implements IBootstrapHelper {
 
   }
 
-  getServerConfig(configPath?: string[]): hapi.ServerOptions {
-    let config: hapi.ServerOptions;
-    const defaultConfig = this.constantHelper.defaultConfig;
+  loadServerConfig(configPath?: string): hapi.ServerOptions {
+    const defaultConfig = this.constantHelper.getDefaultConfig();
 
-    if (configPath) {
-      const filePath = path.resolve(path.join(...configPath));
+    let config: hapi.ServerOptions = {
+      host: defaultConfig.SERVER.HOST,
+      port: defaultConfig.SERVER.PORT,
+    };
 
-      const loadedConfig = this.yamlHelper.readYamlFile(filePath) as IDefaultConfig;
+    if (configPath && fs.existsSync(configPath)) {
+      const loadedConfig = this.yamlHelper.readYamlFile(configPath) as IDefaultConfig;
 
       config = {
         host: loadedConfig.SERVER.HOST,
         port: loadedConfig.SERVER.PORT,
-      };
-    } else {
-      config = {
-        host: defaultConfig.SERVER.HOST,
-        port: defaultConfig.SERVER.PORT,
       };
     }
 
     return config;
   }
 
-  async getDbConnectionConfig(configPath: string[]): Promise<ConnectionOptions> {
-    const filePath = path.resolve(path.join(...configPath));
+  async loadDbConnectionConfig(configPath: string): Promise<ConnectionOptions> {
+    if (!fs.existsSync(configPath)) {
+      throw new Error(`${new Date().toDateString()}:\t - DB Connection with configPath = '${configPath}' was not exist.`);
+    }
 
-    const loadedConfig = this.yamlHelper.readYamlFile(filePath) as IDefaultDatabaseConfig;
+    const loadedConfig = this.yamlHelper.readYamlFile(configPath) as IDefaultDatabaseConfig;
 
     const dbConnectionOptions: ConnectionOptions = {
       name              : loadedConfig.DATABASE.NAME,

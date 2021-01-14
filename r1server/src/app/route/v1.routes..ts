@@ -1,15 +1,16 @@
-import hapi from '@hapi/hapi';
+import { ServerRoute } from '@hapi/hapi';
 import { Container } from 'inversify';
-import { IUsersController } from '../api/v1/Users/Users.Controller';
+import { IDENTIFIER } from '../../helpers/utilites/identifier';
+import { IUsersRoutes } from '../api/v1/Users/Users.Routes';
 
-export const createAppRoutesV1 = (container: Container): hapi.ServerRoute[] => {
-  const usersController = container.get<IUsersController>('IUsersController');
+export const createAppRoutesV1 = (container: Container): ServerRoute[] => {
+  let routes: ServerRoute[] = [];
 
-  let routes: hapi.ServerRoute[] = [];
+  const usersRoutes = container.get<IUsersRoutes>(IDENTIFIER.USERS_ROUTES);
 
   routes = [
     ...routes,
-    ...usersController.getRoutes(),
+    ...usersRoutes.getUsersRoutes(),
   ];
 
   return routes;
